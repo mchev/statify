@@ -1,5 +1,5 @@
 // Replace `API_ENDPOINT` with the actual API endpoint URL
-const API_ENDPOINT = 'http://statify.test/api/send';
+const API_ENDPOINT = 'https://statify.pegase.io/api/send';
 
 // Function to send statistics to the API endpoint
 function sendStatistics(data) {

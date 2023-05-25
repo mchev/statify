@@ -13,6 +13,7 @@ function sendStatistics(data) {
     .then(response => {
       if (response.ok) {
         console.log('Statistics sent successfully!');
+        console.log(response.data);
       } else {
         console.error('Failed to send statistics:', response.status);
       }

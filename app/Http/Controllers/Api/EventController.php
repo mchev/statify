@@ -13,7 +13,7 @@ class EventController extends Controller
     public function __invoke(Request $request) {
 
         $request->validate([
-            'website_id' => ['required', 'exists:websites,id'],
+            'website' => ['required', 'exists:websites,id'],
         ]);
 
         // Retrieve browser, OS, and device information

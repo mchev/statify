@@ -41,12 +41,12 @@ function trackPageView() {
   }
 
   const data = {
-    type: 'visit',
+    type: 'view',
     timestamp: new Date().toISOString(),
     url: window.location.href,
-    website_id: websiteId,
-    // Add any other relevant statistics you want to send
-    // For example, user agent, referrer, etc.
+    title: document.title,
+    screen: window.screen.width + 'x' + window.screen.height,
+    website: websiteId,
   };
 
   sendStatistics(data);

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Website;
+use App\Rules\Domain;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class WebsiteController extends Controller
 {
@@ -20,7 +22,7 @@ class WebsiteController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Websites/Create');
     }
 
     /**
@@ -28,7 +30,14 @@ class WebsiteController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => ['required', 'unique:websites', 'max:255', 'min:3'],
+            'domain' => ['required', 'unique:websites', new Domain],
+        ]);
+
+        $website = $request->user()->currentTeam->websites()->create($validated);
+
+        return redirect()->route('websites.edit', $website);
     }
 
     /**
@@ -36,7 +45,9 @@ class WebsiteController extends Controller
      */
     public function show(Website $website)
     {
-        //
+        return Inertia::render('Websites/Show', [
+            'website' => $website
+        ]);
     }
 
     /**
@@ -44,7 +55,9 @@ class WebsiteController extends Controller
      */
     public function edit(Website $website)
     {
-        //
+        return Inertia::render('Websites/Edit', [
+            'website' => $website
+        ]);
     }
 
     /**

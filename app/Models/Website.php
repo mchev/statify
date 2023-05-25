@@ -8,4 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 class Website extends Model
 {
     use HasFactory;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'name',
+        'domain',
+    ];
+
+    public function team() {
+        return $this->belongsTo(Team::class);
+    }
 }

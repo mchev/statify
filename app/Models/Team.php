@@ -12,6 +12,10 @@ class Team extends JetstreamTeam
 {
     use HasFactory;
 
+    protected $with = [
+        'websites'
+    ];
+
     /**
      * The attributes that should be cast.
      *
@@ -41,4 +45,9 @@ class Team extends JetstreamTeam
         'updated' => TeamUpdated::class,
         'deleted' => TeamDeleted::class,
     ];
+
+    public function websites()
+    {
+        return $this->hasMany(Website::class);
+    }
 }

@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('websites', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('domain');
+            $table->foreignId('team_id');
             $table->timestamps();
         });
     }

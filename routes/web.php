@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\WebsiteController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -32,4 +33,13 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+
+    Route::get('/websites/create', [WebsiteController::class, 'create'])
+        ->name('websites.create');
+    Route::post('/websites', [WebsiteController::class, 'store'])
+        ->name('websites.store');
+    Route::get('/websites/{website}', [WebsiteController::class, 'show'])
+        ->name('websites.show');
+    Route::get('/websites/{website}/edit', [WebsiteController::class, 'edit'])
+        ->name('websites.edit');
 });

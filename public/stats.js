@@ -1,56 +1,72 @@
-// Replace `API_ENDPOINT` with the actual API endpoint URL
-const API_ENDPOINT = 'https://statify.pegase.io/api/send';
+// Define constants
+const API_ENDPOINT = `${document.currentScript.src.split("/").slice(0, -1).join("/")}/api/send`;
+const WEBSITE_ID = document.currentScript.getAttribute("website");
 
-// Function to send statistics to the API endpoint
-function sendStatistics(data) {
-  fetch(API_ENDPOINT, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  })
-    .then(response => {
-      if (response.ok) {
-        console.log('Statistics sent successfully!');
-        console.log(response.data);
-      } else {
-        console.error('Failed to send statistics:', response.status);
-      }
-    })
-    .catch(error => {
-      console.error('Error sending statistics:', error);
+// Record start time
+const startTime = performance.now();
+
+// Override pushState to dispatch location change event
+const oldPushState = history.pushState;
+history.pushState = function pushState() {
+  const ret = oldPushState.apply(this, arguments);
+  window.dispatchEvent(new Event('locationchange'));
+  return ret;
+};
+
+// Send statistics to the API
+async function sendStatistics(data) {
+  try {
+    const response = await fetch(API_ENDPOINT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
     });
-}
 
-function getWebsiteIdFromScript() {
-  const currentScript = document.currentScript;
-  if (currentScript && currentScript.hasAttribute('data-website-id')) {
-    return currentScript.getAttribute('data-website-id');
+    if (response.ok) {
+      console.log("Statistics sent successfully!");
+      console.log(await response.json());
+    } else {
+      console.error("Failed to send statistics:", response.status);
+    }
+  } catch (error) {
+    console.error("Error sending statistics:", error);
   }
-  return null;
 }
 
 // Function to track a page view
 function trackPageView() {
-
-  const websiteId = getWebsiteIdFromScript();
-  if (!websiteId) {
-    console.error('Missing data-website-id attribute!');
+  if (!WEBSITE_ID) {
+    console.error("Missing website attribute!");
     return;
   }
 
   const data = {
-    type: 'view',
-    timestamp: new Date().toISOString(),
+    type: "view",
     url: window.location.href,
     title: document.title,
-    screen: window.screen.width + 'x' + window.screen.height,
-    website: websiteId,
+    screen: `${window.screen.width}x${window.screen.height}`,
+    language: window.navigator.language,
+    history: window.history,
+    website: WEBSITE_ID,
+    load_time: performance.now() - startTime,
   };
+
+  console.log(data);
 
   sendStatistics(data);
 }
 
-// Call the trackPageView function to send statistics when the page loads
-trackPageView();
+// Function to track clicks on links
+function trackClicks(event) {
+  if (event.target.tagName.toLowerCase() === "a") {
+    console.log('Link clicked');
+  }
+}
+
+// Event listeners
+window.addEventListener("DOMContentLoaded", trackPageView);
+window.addEventListener("popstate", trackPageView);
+window.addEventListener("locationchange", trackPageView);
+window.addEventListener("click", trackClicks);

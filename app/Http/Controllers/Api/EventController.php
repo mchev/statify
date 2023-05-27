@@ -22,10 +22,6 @@ class EventController extends Controller
         $os = $agent->platform();
         $device = $agent->device();
 
-        // Retrieve screen size
-        $screenWidth = $request->header('x-screen-width');
-        $screenHeight = $request->header('x-screen-height');
-
         // Retrieve language
         $language = $request->header('accept-language');
 
@@ -37,16 +33,19 @@ class EventController extends Controller
         $country = $geoip->country;
         $city = $geoip->city;
 
-        // You can now use the retrieved information as needed
-        // For example, store it in a database or send it to an API
-
-        return response()->json([
+        dd([
+            'type' => $request->type,
+            'url' => $request->url,
+            'title' => $request->title,
+            'screen' => $request->screen,
+            'language' => $request->language,
+            'history' => $request->history,
+            'website' => $request->website,
+            'load_time' => $request->load_time,
             'ip' => $ipAddress,
             'browser' => $browser,
             'os' => $os,
             'device' => $device,
-            'screen_width' => $screenWidth,
-            'screen_height' => $screenHeight,
             'language' => $language,
             'country' => $country,
             'city' => $city,

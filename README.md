@@ -18,3 +18,4 @@ A Laravel based self-hosted websiste statistics app
 [ ] Allow CORS websites array
 [ ] Events CRUD
 [ ] Events Aggregation
+[ ] Schedule run delete events older than 24h every hours

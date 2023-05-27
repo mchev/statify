@@ -9,7 +9,13 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-        <script async src="https://statify.pegase.io/stats.js" data-website-id="11"></script>
+
+        @production
+            <script async src="https://statify.pegase.io/stats.js" website="1"></script>
+        @else
+            <script async src="http://statify.test/stats.js" website="11"></script>
+        @endproduction
+
         <!-- Scripts -->
         @routes
         @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])

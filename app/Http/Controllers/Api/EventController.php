@@ -3,54 +3,61 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Visitor;
 use Illuminate\Http\Request;
 use Jenssegers\Agent\Agent;
-use \Torann\GeoIP\Facades\GeoIP;
+use Torann\GeoIP\Facades\GeoIP;
+use Illuminate\Support\Str;
 
 class EventController extends Controller
 {
-
-    public function __invoke(Request $request) {
-
-        $request->validate([
+    public function __invoke(Request $request)
+    {
+        $validatedData = $request->validate([
+            'type' => ['required'],
             'website' => ['required', 'exists:websites,id'],
         ]);
 
-        // Retrieve browser, OS, and device information
-        $agent = new Agent();
-        $browser = $agent->browser();
-        $os = $agent->platform();
-        $device = $agent->device();
+        $token = $request->token ?? Str::uuid();
+        $visitor = Visitor::firstOrNew(['token' => $request->token]);
 
-        // Retrieve language
-        $language = $request->header('accept-language');
+        if (!$visitor->exists) {
+            $agent = new Agent();
+            $ipAddress = $request->header('x-forwarded-for') ?: $request->ip();
+            $geoip = GeoIP::getLocation($ipAddress);
 
-        // Retrieve IP address
-        $ipAddress = $request->header('x-forwarded-for') ?: $request->ip();
+            $visitor->fill([
+                'token' => Str::uuid(),
+                'website_id' => $validatedData['website'],
+                'browser' => $agent->browser(),
+                'os' => $agent->platform(),
+                'device' => $agent->device(),
+                'screen' => $request->screen,
+                'language' => $request->language,
+                'country' => $geoip->iso_code,
+                'city' => $geoip->city,
+                'lat' => $geoip->lat,
+                'lon' => $geoip->lon,
+            ])->save();
+        } else {
+            $visitor->touch();
+        }
 
-        // Retrieve country and city
-        $geoip = GeoIP::getLocation($ipAddress);
-        $country = $geoip->country;
-        $city = $geoip->city;
+        if ($request->type === 'view') {
+            $visitor->views()->create([
+                'website_id' => $request->website,
+                'type' => "view",
+                'url_path' => parse_url($request->url, PHP_URL_PATH),
+                'url_query' => parse_url($request->url, PHP_URL_QUERY),
+                'referer_path' => parse_url($request->referrer, PHP_URL_PATH),
+                'referer_query' => parse_url($request->referrer, PHP_URL_QUERY),
+                'referer_domain' => parse_url($request->referrer,  PHP_URL_HOST),
+                'page_title' => $request->title,
+            ]);
+        }
 
-        dd([
-            'type' => $request->type,
-            'url' => $request->url,
-            'title' => $request->title,
-            'screen' => $request->screen,
-            'language' => $request->language,
-            'history' => $request->history,
-            'website' => $request->website,
-            'load_time' => $request->load_time,
-            'ip' => $ipAddress,
-            'browser' => $browser,
-            'os' => $os,
-            'device' => $device,
-            'language' => $language,
-            'country' => $country,
-            'city' => $city,
+        return response()->json([
+            'token' => $visitor->token,
         ]);
-
     }
-    
 }

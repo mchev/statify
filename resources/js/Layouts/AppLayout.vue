@@ -132,7 +132,7 @@ const logout = () => {
 
                                     <template #content>
                                         <div class="w-60">
-                                            <!-- Team Management -->
+                                            <!-- Create a new website -->
                                             <template v-if="$page.props.jetstream.hasTeamFeatures">
                                                 <DropdownLink :href="route('websites.create')">
                                                     <div class="flex items-center gap-2">
@@ -143,15 +143,15 @@ const logout = () => {
                                                     </div>
                                                 </DropdownLink>
 
-                                                <!-- Team Switcher -->
-                                                <template v-if="$page.props.auth.user.all_teams.length > 1">
+                                                <!-- Website Switcher -->
+                                                <template v-if="$page.props.auth.user.all_teams.length > 0">
                                                     <div class="border-t border-gray-200 dark:border-gray-600" />
 
-                                                    <div v-for="team in $page.props.auth.user.all_teams" :key="team.id">
+                                                    <div v-for="team in $page.props.auth.user.all_teams" :key="`team-${team.id}`">
                                                         <div class="block px-4 py-2 text-xs text-gray-400 uppercase">
                                                             {{ team.name }}
                                                         </div>
-                                                        <DropdownLink v-for="website in team.websites" :href="route('websites.show', website)">
+                                                        <DropdownLink v-for="website in team.websites" :href="route('websites.show', website)" :key="`website-${website.id}`">
                                                             {{ website.domain }}
                                                         </DropdownLink>
                                                     </div>

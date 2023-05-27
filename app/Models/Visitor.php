@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Website extends Model
+class Visitor extends Model
 {
     use HasFactory;
 
@@ -15,23 +15,26 @@ class Website extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'domain',
+        'token',
+        'website_id',
+        'browser',
+        'os',
+        'device',
+        'screen',
+        'language',
+        'country',
+        'city',
     ];
 
-    public function team()
+    public function website()
     {
-        return $this->belongsTo(Team::class);
-    }
-
-    public function visitors()
-    {
-        return $this->hasMany(Visitor::class);
+        return $this->belongsTo(Website::class);
     }
 
     public function views()
     {
         return $this->hasMany(View::class);
     }
+
 
 }

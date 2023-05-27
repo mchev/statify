@@ -46,7 +46,8 @@ class WebsiteController extends Controller
     public function show(Website $website)
     {
         return Inertia::render('Websites/Show', [
-            'website' => $website
+            'website' => $website,
+            'visitors_count' => $website->visitors()->whereBetween('created_at', [now()->subHours(24), now()])->count()
         ]);
     }
 
@@ -56,7 +57,7 @@ class WebsiteController extends Controller
     public function edit(Website $website)
     {
         return Inertia::render('Websites/Edit', [
-            'website' => $website
+            'website' => $website,
         ]);
     }
 

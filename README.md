@@ -19,3 +19,14 @@ A Laravel based self-hosted websiste statistics app
 [ ] Events CRUD
 [ ] Events Aggregation
 [ ] Schedule run delete events older than 24h every hours
+
+agregated
+- from (local, ga, etc)
+- website_id
+- day
+
+
+## Installation
+
+Environnement :
+CACHE_DRIVER=array

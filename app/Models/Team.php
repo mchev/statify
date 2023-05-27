@@ -13,7 +13,7 @@ class Team extends JetstreamTeam
     use HasFactory;
 
     protected $with = [
-        'websites'
+        'websites',
     ];
 
     /**

@@ -5,6 +5,7 @@ import CreateWebsiteForm from '@/Pages/Websites/Partials/CreateWebsiteForm.vue';
 
 defineProps({
     website: Object,
+    visitors_count: Number,
 })
 
 </script>

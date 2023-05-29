@@ -31,4 +31,8 @@ class View extends Model
         return $this->belongsToMany(Visitor::class);
     }
 
+    public function scopeRange($query, array $dates)
+    {
+        $query->whereBetween('created_at', [$dates[0], $dates[1]]);
+    }
 }

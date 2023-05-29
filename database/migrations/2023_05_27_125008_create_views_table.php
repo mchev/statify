@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('website_id')->index();
             $table->foreignId('visitor_id');
-            $table->string('type');
             $table->string('url_path');
             $table->string('url_query')->nullable();
             $table->string('referer_path')->nullable();

@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Visitor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Jenssegers\Agent\Agent;
 use Torann\GeoIP\Facades\GeoIP;
-use Illuminate\Support\Str;
 
 class EventController extends Controller
 {
@@ -21,7 +21,7 @@ class EventController extends Controller
         $token = $request->token ?? Str::uuid();
         $visitor = Visitor::firstOrNew(['token' => $request->token]);
 
-        if (!$visitor->exists) {
+        if (! $visitor->exists) {
             $agent = new Agent();
             $ipAddress = $request->header('x-forwarded-for') ?: $request->ip();
             $geoip = GeoIP::getLocation($ipAddress);
@@ -46,12 +46,11 @@ class EventController extends Controller
         if ($request->type === 'view') {
             $visitor->views()->create([
                 'website_id' => $request->website,
-                'type' => "view",
                 'url_path' => parse_url($request->url, PHP_URL_PATH),
                 'url_query' => parse_url($request->url, PHP_URL_QUERY),
                 'referer_path' => parse_url($request->referrer, PHP_URL_PATH),
                 'referer_query' => parse_url($request->referrer, PHP_URL_QUERY),
-                'referer_domain' => parse_url($request->referrer,  PHP_URL_HOST),
+                'referer_domain' => parse_url($request->referrer, PHP_URL_HOST),
                 'page_title' => $request->title,
             ]);
         }

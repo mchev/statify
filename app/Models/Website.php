@@ -33,5 +33,4 @@ class Website extends Model
     {
         return $this->hasMany(View::class);
     }
-
 }

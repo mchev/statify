@@ -1,0 +1,1 @@
+import{o as e,d as t,F as o,g as n,a as c,t as s,f as u}from"./app-4dfc7e98.js";const m={__name:"BrowserStats",props:{browsers:Object},setup(a){return(i,p)=>(e(),t("ul",null,[(e(!0),t(o,null,n(a.browsers,(l,r)=>(e(),t("li",{key:r,class:"flex justify-between"},[c("div",null,s(r),1),u(" "+s(l),1)]))),128))]))}};export{m as default};

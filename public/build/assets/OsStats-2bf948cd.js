@@ -1,0 +1,1 @@
+import{o as e,d as t,F as n,g as o,a as c,t as a,f as u}from"./app-4dfc7e98.js";const m={__name:"OsStats",props:{os:Object},setup(r){return(i,p)=>(e(),t("ul",null,[(e(!0),t(n,null,o(r.os,(l,s)=>(e(),t("li",{key:s,class:"flex justify-between"},[c("div",null,a(s),1),u(" "+a(l),1)]))),128))]))}};export{m as default};

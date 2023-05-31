@@ -11,7 +11,7 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
         @production
-            <script async src="https://statify.pegase.io/stats.js" website="1"></script>
+            <script async src="https://statify.pegase.io/{{ env('STATIFY_SCRIPT_NAME') }}.js" website="1"></script>
         @else
             <script async src="http://statify.test/infos.js" website="1"></script>
         @endproduction

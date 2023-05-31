@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ScriptController;
 use App\Http\Controllers\WebsiteController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -15,6 +16,8 @@ use Inertia\Inertia;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/{scriptName}.js', [ScriptController::class, 'show']);
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('token');
             $table->foreignId('website_id')->index();
+            $table->string('referer_domain')->nullable();
             $table->string('browser');
             $table->string('os');
             $table->string('device');

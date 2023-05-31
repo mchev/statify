@@ -13,7 +13,7 @@
         @production
             <script async src="https://statify.pegase.io/stats.js" website="1"></script>
         @else
-            <script async src="http://statify.test/stats.js" website="1"></script>
+            <script async src="http://statify.test/infos.js" website="1"></script>
         @endproduction
 
         <!-- Scripts -->

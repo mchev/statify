@@ -69,8 +69,8 @@ class WebsiteController extends Controller
 
         $stats = [
             'counts' => [
-                'visitors_count' => $visitors->first()->count,
-                'views_count' => $views->first()->count
+                'visitors_count' => $visitors->first()?->count,
+                'views_count' => $views->first()?->count,
             ],
             'visitors' => $this->fillMissingDates($visitors->groupBy('date')->map(fn ($group) => $group->sum('count')), $dates),
             'views' => $this->fillMissingDates($views->groupBy('date')->map(fn ($group) => $group->sum('count')), $dates),
@@ -81,13 +81,14 @@ class WebsiteController extends Controller
             'languages' => $visitors->groupBy('language')->map(fn ($group) => $group->sum('count'))->sortDesc(),
             'countries' => $visitors->groupBy('country')->map(fn ($group) => $group->sum('count'))->sortDesc(),
             'cities' => $visitors->groupBy('city')->map(fn ($group) => $group->sum('count'))->sortDesc(),
-            'referers' => $views->groupBy('referer_domain')->map(fn ($group) => $group->sum('count'))->sortDesc(),
+            'referers_visitors' => $visitors->groupBy('referer_domain')->map(fn ($group) => $group->sum('count'))->sortDesc(),
+            'referers_views' => $views->groupBy('referer_domain')->map(fn ($group) => $group->sum('count'))->sortDesc(),
             'pages' => $views->groupBy('url_path')->map(fn ($group) => $group->sum('count'))->sortDesc(),
         ];
 
         return Inertia::render('Websites/Show', [
             'filters' => $request->all('range', 'search'),
-            'website' => $website,
+            'website' => $website->load('team'),
             'dates' => $dates,
             'stats' => $stats,
         ]);
@@ -109,6 +110,7 @@ class WebsiteController extends Controller
     {
         return Inertia::render('Websites/Edit', [
             'website' => $website,
+            'script' => '<script src="' . config('app.url') . '>'
         ]);
     }
 

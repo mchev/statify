@@ -2,8 +2,8 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "dev": "vite",
-        "build": "vite build"
+        "dev": "vite build -c vite.script.config.js && vite",
+        "build": "vite build && vite build -c vite.script.config.js"
     },
     "devDependencies": {
         "@inertiajs/vue3": "^1.0.0",

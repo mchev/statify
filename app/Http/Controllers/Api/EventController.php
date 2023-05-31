@@ -29,6 +29,7 @@ class EventController extends Controller
             $visitor->fill([
                 'token' => Str::uuid(),
                 'website_id' => $validatedData['website'],
+                'referer_domain' => parse_url($request->referrer, PHP_URL_HOST),
                 'browser' => $agent->browser(),
                 'os' => $agent->platform(),
                 'device' => $agent->device(),

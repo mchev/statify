@@ -54,6 +54,11 @@ const chartOptions = {
     legend: {
       position: 'top',
     },
+  },
+  scales: {
+    y: {
+      min: 0,
+    }
   }
 };
 </script>

@@ -25,6 +25,7 @@ class WebsiteFactory extends Factory
             'name' => 'Default',
             'domain' => 'default.com',
             'team_id' => 1,
+            'modules' => json_encode([]),
         ];
     }
 }

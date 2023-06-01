@@ -36,8 +36,14 @@ class Visitor extends Model
         return $this->hasMany(View::class);
     }
 
-    public function scopeRange($query, array $dates)
+    public function scopeDateRange($query, array $dates)
     {
         $query->whereBetween('created_at', [$dates[0], $dates[1]]);
+    }
+
+    public function scopeGroupByGranularity($query, string $granularity)
+    {
+        $query->selectRaw($granularity . " AS date, COUNT(*) AS count, AVG(TIMESTAMPDIFF(SECOND, created_at, updated_at)) as average_time, browser, os, device, screen, language, country, city")
+            ->groupBy('date', 'browser', 'os', 'device', 'screen', 'language', 'country', 'city');
     }
 }

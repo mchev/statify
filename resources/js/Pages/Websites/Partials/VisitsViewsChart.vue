@@ -1,5 +1,6 @@
 <script setup>
 import { Line } from "vue-chartjs";
+import { parse } from "date-fns";
 import {
   Chart as ChartJS,
   CategoryScale,

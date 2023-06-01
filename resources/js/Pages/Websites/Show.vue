@@ -5,6 +5,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import Card from "@/Components/Card.vue";
 import CreateWebsiteForm from "@/Pages/Websites/Partials/CreateWebsiteForm.vue";
+import StatSummary from "@/Pages/Websites/Partials/StatSummary.vue";
 import VisitsViewsChart from "@/Pages/Websites/Partials/VisitsViewsChart.vue";
 import PageStats from "@/Pages/Websites/Partials/PageStats.vue";
 import RefererStats from "@/Pages/Websites/Partials/RefererStats.vue";
@@ -210,6 +211,7 @@ watch(
                 class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8 dark:text-gray-200"
             >
                 <div class="grid grid-cols-1 gap-4 mb-4">
+                    <StatSummary :summary="stats.summary"/>
                     <Card>
                         <VisitsViewsChart
                             :dates="dates"

@@ -109,21 +109,26 @@ class WebsiteController extends Controller
             ->toArray();
 
         $visitors = $website->visitors()
-            ->range($range)
-            ->selectRaw($options[$granularity]['query_format'] . " AS date, COUNT(*) AS count, browser, os, device, screen, language, country, city")
-            ->groupBy('date', 'browser', 'os', 'device', 'screen', 'language', 'country', 'city')
+            ->dateRange($range)
+            ->groupByGranularity($options[$granularity]['query_format'])
             ->get();
 
         $views = $website->views()
-            ->range($range)
-            ->selectRaw($options[$granularity]['query_format'] . " AS date, COUNT(*) AS count, url_path, referer_domain, page_title")
-            ->groupBy('date', 'url_path', 'referer_domain', 'page_title')
+            ->dateRange($range)
+            ->groupByGranularity($options[$granularity]['query_format'])
             ->get();
 
+        $visitors_count = $visitors->sum('count');
+        $singlePageVisitors = $website->visitors()->dateRange($range)->has('views', '=', 1)->count();
+        $bounceRate = ($visitors_count > 0) ? ($singlePageVisitors / $visitors_count) * 100 : 0;
+
         $stats = [
-            'counts' => [
-                'visitors_count' => $visitors->first()?->count,
-                'views_count' => $views->first()?->count,
+            'summary' => [
+                'visitors' => $visitors_count,
+                'views' => $views->sum('count'),
+                'average_time' => $visitors->avg('average_time'),
+                'bounce_rate' => $bounceRate,
+                'engagement_rate' => 100 - $bounceRate,
             ],
             'visitors' => $this->fillMissingDates($visitors->groupBy('date')->map(fn ($group) => $group->sum('count')), $dates),
             'views' => $this->fillMissingDates($views->groupBy('date')->map(fn ($group) => $group->sum('count')), $dates),

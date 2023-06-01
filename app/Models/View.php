@@ -31,8 +31,14 @@ class View extends Model
         return $this->belongsToMany(Visitor::class);
     }
 
-    public function scopeRange($query, array $dates)
+    public function scopeDateRange($query, array $dates)
     {
         $query->whereBetween('created_at', [$dates[0], $dates[1]]);
+    }
+
+    public function scopeGroupByGranularity($query, string $granularity)
+    {
+        $query->selectRaw($granularity . " AS date, COUNT(*) AS count, url_path, referer_domain, page_title")
+            ->groupBy('date', 'url_path', 'referer_domain', 'page_title');
     }
 }

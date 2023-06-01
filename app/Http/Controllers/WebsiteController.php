@@ -47,25 +47,78 @@ class WebsiteController extends Controller
      */
     public function show(Request $request, Website $website)
     {
-        if (! $request->has('range')) {
-            $request->merge(['range' => [now()->subDays(6)->startOfDay(), now()->endOfDay()]]);
-        }
+
+        $range = $request->has('range') ? [
+            Carbon::parse($request->range[0])->startOfDay(),
+            Carbon::parse($request->range[1])->endOfDay()
+        ] : [
+            now()->subDays(6)->startOfDay(),
+            now()->endOfDay()
+        ];
+
+        $from = $range[0];
+        $to = $range[1];
+        $duration = $range[0]->diff($range[1]);
+
+        $options = [
+            'years' => [
+                'format' => "Y",
+                'query_format' => "DATE_FORMAT(created_at, '%Y')",
+                'range' => [
+                    $range[0]->copy()->startOfYear(),
+                    '1 year',
+                    $range[1]->copy()->endOfYear()
+                ]
+            ],
+            'months' => [
+                'format' => "Y-m",
+                'query_format' => "DATE_FORMAT(created_at, '%Y-%m')",
+                'range' => [
+                    $range[0]->copy()->startOfMonth(),
+                    '1 month',
+                    $range[1]->copy()->endOfMonth()
+                ]
+            ],
+            'days' => [
+                'format' => "Y-m-d",
+                'query_format' => "DATE(created_at)",
+                'range' => [
+                    $range[0]->copy()->startOfDay(),
+                    '1 day',
+                    $range[1]->copy()->endOfDay()
+                ]
+            ],
+            'hours' => [
+                'format' => "Y-m-d H",
+                'query_format' => "DATE_FORMAT(created_at, '%Y-%m-%d %H')",
+                'range' => [
+                    $range[0]->copy()->startOfDay(),
+                    '1 hour',
+                    $range[1]->copy()->endOfDay()
+                ]
+            ],
+        ];
+
+        $granularity = ($duration->days > 365) ? 'years' : // At least one year
+                        (($duration->days > 60) ? 'months' : // At least two months
+                        (($duration->days > 1) ? 'days' : 'hours'));
+
+        $period = $options[$granularity]['range'];
+        $dates = collect(CarbonPeriod::create(...$period))
+            ->map(fn ($date) => $date->format($options[$granularity]['format']))
+            ->toArray();
 
         $visitors = $website->visitors()
-            ->range($request->range)
-            ->selectRaw('DATE(created_at) AS date, COUNT(*) AS count, browser, os, device, screen, language, country, city')
+            ->range($range)
+            ->selectRaw($options[$granularity]['query_format'] . " AS date, COUNT(*) AS count, browser, os, device, screen, language, country, city")
             ->groupBy('date', 'browser', 'os', 'device', 'screen', 'language', 'country', 'city')
             ->get();
 
         $views = $website->views()
-            ->range($request->range)
-            ->selectRaw('DATE(created_at) AS date, COUNT(*) AS count, url_path, referer_domain, page_title')
+            ->range($range)
+            ->selectRaw($options[$granularity]['query_format'] . " AS date, COUNT(*) AS count, url_path, referer_domain, page_title")
             ->groupBy('date', 'url_path', 'referer_domain', 'page_title')
             ->get();
-
-        $dates = collect(CarbonPeriod::create(Carbon::parse($request->range[0])->startOfDay(), Carbon::parse($request->range[1])->endOfDay()))
-            ->map(fn ($date) => $date->format('Y-m-d'))
-            ->toArray();
 
         $stats = [
             'counts' => [
@@ -87,7 +140,10 @@ class WebsiteController extends Controller
         ];
 
         return Inertia::render('Websites/Show', [
-            'filters' => $request->all('range', 'search'),
+            'filters' => [
+                'range' => [$range[0]->format('Y-m-d'), $range[1]->format('Y-m-d')],
+                'search' => $request->search
+            ],
             'website' => $website->load('team'),
             'dates' => $dates,
             'stats' => $stats,
@@ -110,7 +166,7 @@ class WebsiteController extends Controller
     {
         return Inertia::render('Websites/Edit', [
             'website' => $website,
-            'script' => '<script src="' . config('app.url') . '>'
+            'script' => '<script src="' . config('app.url') . '/"' . config('satify.script_name') . ' >'
         ]);
     }
 

@@ -35,13 +35,16 @@ const chartData = {
     {
       label: 'Unique visitors',
       data: props.visitors,
-      borderColor: 'purple',
-      fill: false,
+      borderColor: 'rgba(149, 128, 255, .4)',
+      backgroundColor: 'rgba(149, 128, 255, .4)',
+      fill: true,
+      tension: 0.1
     },
     {
       label: 'Page views',
       data: props.views,
-      backgroundColor: '#333',
+      borderColor: 'rgba(149, 128, 255, .2)',
+      backgroundColor: 'rgba(149, 128, 255, .2)',
       fill: true,
       tension: 0.1
     },
@@ -50,10 +53,26 @@ const chartData = {
 
 const chartOptions = { 
   responsive: true,
+  interaction: {
+    mode: 'index'
+  },
+  elements: {
+    point: {
+      radius: 0,
+    }
+  },
   plugins: {
     legend: {
       position: 'top',
+      labels: {
+        font: {
+          size: 14,
+        }
+      }
     },
+    tooltip: {
+      intersect: false,
+    }
   },
   scales: {
     y: {

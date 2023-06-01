@@ -1,5 +1,6 @@
 <script setup>
 import Card from "@/Components/Card.vue"
+import FormattedNumber from "@/Components/FormattedNumber.vue"
 import { format } from "date-fns";
 
 const props = defineProps({
@@ -10,12 +11,22 @@ const props = defineProps({
 <template>
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
     <Card>
-      <span class="text-2xl font-semibold">{{ summary.visitors }}</span>
-      <p>Visitors</p>
+      <FormattedNumber :value="summary.visitors.total" class="text-2xl font-semibold"/>
+      <div class="flex items-end gap-2">
+        <p>Visitors</p>
+        <span class="font-semibold text-sm flex" :class="summary.visitors.diff > 0 ? 'text-teal-500' : 'text-red-400'">
+          <span v-if="summary.visitors.diff > 0">+</span><FormattedNumber :value="summary.visitors.diff"/>
+        </span>
+      </div>
     </Card>
     <Card>
-      <span class="text-2xl font-semibold">{{ summary.views }}</span>
-      <p>Views</p>
+      <FormattedNumber :value="summary.views.total" class="text-2xl font-semibold"/>
+      <div class="flex items-end gap-2">
+        <p>Views</p>
+        <span class="font-semibold text-sm flex" :class="summary.views.diff > 0 ? 'text-teal-500' : 'text-red-400'">
+          <span v-if="summary.views.diff > 0">+</span><FormattedNumber :value="summary.views.diff"/>
+        </span>
+      </div>
     </Card>
     <Card>
       <span class="text-2xl font-semibold">{{ format((summary.average_time * 1000), 'mm:ss') }}</span>

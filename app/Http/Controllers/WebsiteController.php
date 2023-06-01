@@ -56,9 +56,10 @@ class WebsiteController extends Controller
             now()->endOfDay()
         ];
 
-        $from = $range[0];
-        $to = $range[1];
-        $duration = $range[0]->diff($range[1]);
+        $duration = $range[0]->diffInDays($range[1]);
+        $compareDuration = $duration + 1;
+        $previousStart = $range[0]->copy()->subDays($compareDuration);
+        $previousEnd = $range[1]->copy()->subDays($compareDuration);
 
         $options = [
             'years' => [
@@ -99,9 +100,7 @@ class WebsiteController extends Controller
             ],
         ];
 
-        $granularity = ($duration->days > 365) ? 'years' : // At least one year
-                        (($duration->days > 60) ? 'months' : // At least two months
-                        (($duration->days > 1) ? 'days' : 'hours'));
+        $granularity = $this->determineGranularity($range);
 
         $period = $options[$granularity]['range'];
         $dates = collect(CarbonPeriod::create(...$period))
@@ -118,30 +117,45 @@ class WebsiteController extends Controller
             ->groupByGranularity($options[$granularity]['query_format'])
             ->get();
 
+        $previousVisitorsCount = $website->visitors()
+            ->dateRange([$previousStart, $previousEnd])
+            ->count();
+
+        $previousViewsCount = $website->views()
+            ->dateRange([$previousStart, $previousEnd])
+            ->count();
+
         $visitors_count = $visitors->sum('count');
+        $views_count = $views->sum('count');
         $singlePageVisitors = $website->visitors()->dateRange($range)->has('views', '=', 1)->count();
         $bounceRate = ($visitors_count > 0) ? ($singlePageVisitors / $visitors_count) * 100 : 0;
 
         $stats = [
             'summary' => [
-                'visitors' => $visitors_count,
-                'views' => $views->sum('count'),
+                'visitors' => [
+                    'total' => $visitors_count,
+                    'diff' => $visitors_count - $previousVisitorsCount
+                ],
+                'views' => [
+                    'total' => $views_count,
+                    'diff' => $views_count - $previousViewsCount
+                ],
                 'average_time' => $visitors->avg('average_time'),
                 'bounce_rate' => $bounceRate,
                 'engagement_rate' => 100 - $bounceRate,
             ],
             'visitors' => $this->fillMissingDates($visitors->groupBy('date')->map(fn ($group) => $group->sum('count')), $dates),
             'views' => $this->fillMissingDates($views->groupBy('date')->map(fn ($group) => $group->sum('count')), $dates),
-            'browsers' => $visitors->groupBy('browser')->map(fn ($group) => $group->sum('count'))->sortDesc(),
-            'os' => $visitors->groupBy('os')->map(fn ($group) => $group->sum('count'))->sortDesc(),
-            'devices' => $visitors->groupBy('device')->map(fn ($group) => $group->sum('count'))->sortDesc(),
-            'screens' => $visitors->groupBy('screen')->map(fn ($group) => $group->sum('count'))->sortDesc(),
-            'languages' => $visitors->groupBy('language')->map(fn ($group) => $group->sum('count'))->sortDesc(),
-            'countries' => $visitors->groupBy('country')->map(fn ($group) => $group->sum('count'))->sortDesc(),
-            'cities' => $visitors->groupBy('city')->map(fn ($group) => $group->sum('count'))->sortDesc(),
-            'referers_visitors' => $visitors->groupBy('referer_domain')->map(fn ($group) => $group->sum('count'))->sortDesc(),
-            'referers_views' => $views->groupBy('referer_domain')->map(fn ($group) => $group->sum('count'))->sortDesc(),
-            'pages' => $views->groupBy('url_path')->map(fn ($group) => $group->sum('count'))->sortDesc(),
+            'browsers' => $this->generateGroupedData($visitors, 'browser'),
+            'os' => $this->generateGroupedData($visitors, 'os'),
+            'devices' => $this->generateGroupedData($visitors, 'device'),
+            'screens' => $this->generateGroupedData($visitors, 'screen'),
+            'languages' => $this->generateGroupedData($visitors, 'language'),
+            'countries' => $this->generateGroupedData($visitors, 'country'),
+            'cities' => $this->generateGroupedData($visitors, 'city'),
+            'referers_visitors' => $this->generateGroupedData($visitors, 'referer_domain'),
+            'referers_views' => $this->generateGroupedData($views, 'referer_domain'),
+            'pages' => $this->generateGroupedData($views, 'url_path'),
         ];
 
         return Inertia::render('Websites/Show', [
@@ -190,4 +204,29 @@ class WebsiteController extends Controller
     {
         //
     }
+
+
+    /**
+     * Determine the granularity based on the range.
+     */
+    protected function determineGranularity($range)
+    {
+        $duration = $range[0]->diffInDays($range[1]);
+
+        return match (true) {
+            $duration > 365 => 'years',
+            $duration > 60 => 'months',
+            $duration > 1 => 'days',
+            default => 'hours',
+        };
+    }
+
+    /**
+     * Generate grouped data based on a specific column from the data.
+     */
+    protected function generateGroupedData($data, $column)
+    {
+        return $data->groupBy($column)->map(fn ($group) => $group->sum('count'))->sortDesc();
+    }
+
 }

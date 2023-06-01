@@ -18,7 +18,6 @@ return new class extends Migration
             $table->foreignId('team_id');
             $table->string('default_view')->default('Last 7 Days');
             $table->string('chart_type')->default('line');
-            $table->json('modules');
             $table->timestamps();
         });
     }

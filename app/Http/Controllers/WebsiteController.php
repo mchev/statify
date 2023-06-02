@@ -141,8 +141,8 @@ class WebsiteController extends Controller
                     'diff' => $views_count - $previousViewsCount
                 ],
                 'average_time' => $visitors->avg('average_time'),
-                'bounce_rate' => $bounceRate,
-                'engagement_rate' => 100 - $bounceRate,
+                'bounce_rate' => round($bounceRate),
+                'engagement_rate' => round(100 - $bounceRate),
             ],
             'visitors' => $this->fillMissingDates($visitors->groupBy('date')->map(fn ($group) => $group->sum('count')), $dates),
             'views' => $this->fillMissingDates($views->groupBy('date')->map(fn ($group) => $group->sum('count')), $dates),
@@ -185,7 +185,7 @@ class WebsiteController extends Controller
     {
         return Inertia::render('Websites/Edit', [
             'website' => $website,
-            'script' => '<script src="' . config('app.url') . '/"' . config('satify.script_name') . ' >'
+            'script' => '<script async src="' . config('app.url') . '/' . env('STATIFY_SCRIPT_NAME') . '.js" website="'.$website->id . '"></script>'
         ]);
     }
 

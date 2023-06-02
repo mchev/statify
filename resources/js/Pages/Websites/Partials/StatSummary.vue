@@ -14,8 +14,8 @@ const props = defineProps({
       <FormattedNumber :value="summary.visitors.total" class="text-2xl font-semibold"/>
       <div class="flex items-end gap-2">
         <p>Visitors</p>
-        <span class="font-semibold text-sm flex" :class="summary.visitors.diff > 0 ? 'text-teal-500' : 'text-red-400'">
-          <span v-if="summary.visitors.diff > 0">+</span><FormattedNumber :value="summary.visitors.diff"/>
+        <span class="font-semibold text-sm flex" :class="summary.visitors.diff >= 0 ? 'text-teal-500' : 'text-red-400'">
+          <span v-if="summary.visitors.diff >= 0">+</span><FormattedNumber :value="summary.visitors.diff"/>
         </span>
       </div>
     </Card>
@@ -23,8 +23,8 @@ const props = defineProps({
       <FormattedNumber :value="summary.views.total" class="text-2xl font-semibold"/>
       <div class="flex items-end gap-2">
         <p>Views</p>
-        <span class="font-semibold text-sm flex" :class="summary.views.diff > 0 ? 'text-teal-500' : 'text-red-400'">
-          <span v-if="summary.views.diff > 0">+</span><FormattedNumber :value="summary.views.diff"/>
+        <span class="font-semibold text-sm flex" :class="summary.views.diff >= 0 ? 'text-teal-500' : 'text-red-400'">
+          <span v-if="summary.views.diff >= 0">+</span><FormattedNumber :value="summary.views.diff"/>
         </span>
       </div>
     </Card>

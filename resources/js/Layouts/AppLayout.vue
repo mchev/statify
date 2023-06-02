@@ -33,7 +33,7 @@ const logout = () => {
 
         <Banner />
 
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+        <div class="min-h-screen bg-gray-100 dark:bg-gray-900 dark:text-gray-300">
             <nav class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
                 <!-- Primary Navigation Menu -->
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -136,7 +136,7 @@ const logout = () => {
                                             <template v-if="$page.props.jetstream.hasTeamFeatures">
                                                 <DropdownLink :href="route('websites.create')">
                                                     <div class="flex items-center gap-2">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                                                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                                                         </svg>
                                                         New Site
@@ -145,15 +145,17 @@ const logout = () => {
 
                                                 <!-- Website Switcher -->
                                                 <template v-if="$page.props.auth.user.all_teams.length > 0">
-                                                    <div class="border-t border-gray-200 dark:border-gray-600" />
-
                                                     <div v-for="team in $page.props.auth.user.all_teams" :key="`team-${team.id}`">
+                                                        <div class="border-t border-gray-200 dark:border-gray-600" />
                                                         <div class="block px-4 py-2 text-xs text-gray-400 uppercase">
                                                             {{ team.name }}
                                                         </div>
-                                                        <DropdownLink v-for="website in team.websites" :href="route('websites.show', website)" :key="`website-${website.id}`">
+                                                        <DropdownLink v-if="team.websites.length > 0" v-for="website in team.websites" :href="route('websites.show', website)" :key="`website-${website.id}`">
                                                             {{ website.domain }}
                                                         </DropdownLink>
+                                                        <div v-else class="block px-4 py-2 text-sm text-gray-500">
+                                                            No website
+                                                        </div>
                                                     </div>
                                                 </template>
                                             </template>

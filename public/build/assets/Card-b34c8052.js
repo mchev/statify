@@ -1,0 +1,1 @@
+import{_ as o}from"./_plugin-vue_export-helper-c27b6911.js";import{o as r,d as s,m as t}from"./app-d28c9cbf.js";const a={},c={class:"px-4 py-5 bg-white dark:bg-gray-800 sm:p-6 shadow sm:rounded-md"};function d(e,n){return r(),s("div",c,[t(e.$slots,"default")])}const p=o(a,[["render",d]]);export{p as C};

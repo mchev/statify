@@ -9,12 +9,7 @@ import StatSummary from "@/Pages/Websites/Partials/StatSummary.vue";
 import VisitsViewsChart from "@/Pages/Websites/Partials/VisitsViewsChart.vue";
 import PageStats from "@/Pages/Websites/Partials/PageStats.vue";
 import RefererStats from "@/Pages/Websites/Partials/RefererStats.vue";
-import DeviceStats from "@/Pages/Websites/Partials/DeviceStats.vue";
-import BrowserStats from "@/Pages/Websites/Partials/BrowserStats.vue";
-import OsStats from "@/Pages/Websites/Partials/OsStats.vue";
-import LanguageStats from "@/Pages/Websites/Partials/LanguageStats.vue";
-import CountryStats from "@/Pages/Websites/Partials/CountryStats.vue";
-import CityStats from "@/Pages/Websites/Partials/CityStats.vue";
+import StatModule from "@/Pages/Websites/Partials/StatModule.vue";
 import pickBy from "lodash/pickBy";
 import throttle from "lodash/throttle";
 import {
@@ -237,22 +232,22 @@ watch(
                     class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4"
                 >
                     <Card>
-                        <DeviceStats :devices="stats.devices" />
+                        <StatModule title="Devices" :data="stats.devices" />
                     </Card>
                     <Card>
-                        <BrowserStats :browsers="stats.browsers" />
+                        <StatModule title="Browsers" :data="stats.browsers" />
                     </Card>
                     <Card>
-                        <OsStats :os="stats.os" />
+                        <StatModule title="Operating systems" :data="stats.os" />
                     </Card>
                     <Card>
-                        <LanguageStats :languages="stats.languages" />
+                        <StatModule title="Languages" :data="stats.languages" />
                     </Card>
                     <Card>
-                        <CountryStats :countries="stats.countries" />
+                        <StatModule title="Countries" :data="stats.countries" />
                     </Card>
                     <Card>
-                        <CityStats :cities="stats.cities" />
+                        <StatModule title="Cities" :data="stats.cities" />
                     </Card>
                 </div>
             </div>

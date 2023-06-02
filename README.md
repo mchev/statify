@@ -1,6 +1,6 @@
-# Statify
+# Counted
 
-A Laravel based self-hosted websiste statistics app
+Counted is a powerful and user-friendly statistics application designed to streamline data collection and analysis. With Counted, users can effortlessly gather and track various metrics, enabling them to make informed decisions based on accurate and up-to-date statistical insights. The intuitive interface and comprehensive feature set make it easy to input, organize, and visualize data, empowering users to uncover meaningful patterns and trends. Whether it's for business analytics, research projects, or personal data tracking, Counted simplifies the process of harnessing the power of statistics, allowing users to unlock valuable insights and drive data-informed decision-making.
 
 ## Installation
 
@@ -51,30 +51,24 @@ Frequency: Every Minutes
 `php8.2 artisan horizon`
 
 ## Features
-[ ] Import data from Google Analytics
-[x] Multiple websites monitoring by teams
-[ ] Not blocked by adblockers
-[x] Self hosted
-[ ] CSV Exports
-[ ] Monitor site down
-[ ] Fast
+- [ ] Import data from Google Analytics
+- [x] Multiple websites monitoring by teams
+- [ ] Not blocked by adblockers
+- [x] Self hosted
+- [ ] CSV Exports
+- [ ] Monitor site down
+- [ ] Fast
 
 ## Todo
-[ ] Websites CRUD
-[x] Send API
-[x] JS stat script
-[ ] Allow CORS websites array
-[ ] Events CRUD
-[ ] Events Aggregation
-[ ] Schedule run delete events older than 24h every hours
+- [ ] Websites CRUD
+- [x] Send API
+- [x] JS stat script
+- [ ] Allow CORS websites array
+- [ ] Events CRUD
+- [ ] Events Aggregation
+- [ ] Schedule run delete events older than 24h every hours
 
 agregated
 - from (local, ga, etc)
 - website_id
 - day
-
-
-## Installation
-
-Environnement :
-CACHE_DRIVER=array

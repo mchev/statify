@@ -53,15 +53,26 @@ Frequency: Every Minutes
 `php8.2 artisan horizon`
 
 ## Features
-- [ ] Import data from Google Analytics
+- [ ] Imports
+	- [ ] Google Analytics
+	- [ ] Umami
+	- [ ] Plausible
+	- [ ] useFathom
 - [x] Multiple websites monitoring by teams
-- [ ] Not blocked by adblockers
+- [ ] Not blocked by Ad Blockers
+- [ ] RGPD Compliant
 - [x] Self hosted
 - [ ] CSV Exports
-- [ ] Monitor site down
+- [ ] Monitor uptime
+- [ ] Console errors
 - [ ] Fast
+- [ ] Database support
+	- [x] MariaDB
+	- [x] MySQL
+	- [x] PostgreSQL
+	- [ ] SQLite
 
-## Todo
+## WIP
 - [ ] Websites CRUD
 - [x] Send API
 - [x] JS stat script

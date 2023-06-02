@@ -10,7 +10,7 @@ class ScriptController extends Controller
 {
     public function show(Request $request, $scriptName)
     {
-        $customScriptName = config('statify.script_name');
+        $customScriptName = config('counted.script_name');
         $scriptPath = public_path('script.js');
 
         if ($scriptName === $customScriptName && File::exists($scriptPath)) {

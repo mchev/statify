@@ -1,11 +1,11 @@
 {
-    "name": "laravel/laravel",
+    "name": "mchev/counted",
     "type": "project",
-    "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "description": "Counted: Simplify Your Statistics.",
+    "keywords": ["app", "laravel", "statistics", "analytics", "metrics"],
     "license": "MIT",
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "guzzlehttp/guzzle": "^7.2",
         "inertiajs/inertia-laravel": "^0.6.8",
         "fakerphp/faker": "^1.9.1",

@@ -1,10 +1,12 @@
-# Counted
+# Counted 📏
+
+> Work in progress
 
 Counted is a powerful and user-friendly statistics application designed to streamline data collection and analysis. With Counted, users can effortlessly gather and track various metrics, enabling them to make informed decisions based on accurate and up-to-date statistical insights. The intuitive interface and comprehensive feature set make it easy to input, organize, and visualize data, empowering users to uncover meaningful patterns and trends. Whether it's for business analytics, research projects, or personal data tracking, Counted simplifies the process of harnessing the power of statistics, allowing users to unlock valuable insights and drive data-informed decision-making.
 
 ## Installation
 
-Define the `STATIFY_SCRIPT_NAME="yourscript"` in the `.env` file.
+Define the `COUNTED_SCRIPT_NAME="yourscript"` in the `.env` file.
 
 ## Deploy on Forge
 

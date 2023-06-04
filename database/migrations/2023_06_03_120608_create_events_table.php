@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('website_id')->index();
             $table->foreignId('visitor_id');
             $table->string('name');
+            $table->string('location');
             $table->timestamps();
 
             $table->index(['created_at']);

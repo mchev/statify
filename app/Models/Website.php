@@ -33,4 +33,10 @@ class Website extends Model
     {
         return $this->hasMany(View::class);
     }
+
+    public function events()
+    {
+        return $this->hasMany(Event::class);
+    }
+
 }

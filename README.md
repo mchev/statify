@@ -66,7 +66,7 @@ Frequency: Every Minutes
 - [ ] Monitor uptime
 - [ ] Console errors
 - [ ] Fast
-- [ ] Database support
+- [-] Database support
 	- [x] MariaDB
 	- [x] MySQL
 	- [x] PostgreSQL

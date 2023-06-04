@@ -54,6 +54,7 @@ const chartData = {
 
 const chartOptions = { 
   responsive: true,
+  maintainAspectRatio: false,
   interaction: {
     mode: 'index'
   },

@@ -14,12 +14,12 @@ class EventController extends Controller
     public function __invoke(Request $request)
     {
         $validatedData = $request->validate([
-            'type' => ['required'],
-            'website' => ['required', 'exists:websites,id'],
+            'type' => 'required',
+            'website' => 'required|exists:websites,id',
         ]);
 
-        $token = $request->token ?? Str::uuid();
-        $visitor = Visitor::firstOrNew(['token' => $request->token]);
+        $token = $request->input('token', Str::uuid());
+        $visitor = Visitor::firstOrNew(['token' => $token]);
 
         if (! $visitor->exists) {
             $agent = new Agent();
@@ -33,8 +33,8 @@ class EventController extends Controller
                 'browser' => $agent->browser(),
                 'os' => $agent->platform(),
                 'device' => $agent->device(),
-                'screen' => $request->screen,
-                'language' => $request->language,
+                'screen' => $request->input('screen'),
+                'language' => $request->input('language'),
                 'country' => $geoip->iso_code,
                 'city' => $geoip->city,
                 'lat' => $geoip->lat,
@@ -44,15 +44,22 @@ class EventController extends Controller
             $visitor->touch();
         }
 
-        if ($request->type === 'view') {
+        if ($request->input('type') === 'view') {
             $visitor->views()->create([
-                'website_id' => $request->website,
-                'url_path' => parse_url($request->url, PHP_URL_PATH),
-                'url_query' => parse_url($request->url, PHP_URL_QUERY),
-                'referer_path' => parse_url($request->referrer, PHP_URL_PATH),
-                'referer_query' => parse_url($request->referrer, PHP_URL_QUERY),
-                'referer_domain' => parse_url($request->referrer, PHP_URL_HOST),
-                'page_title' => $request->title,
+                'website_id' => $request->input('website'),
+                'url_path' => parse_url($request->input('url'), PHP_URL_PATH),
+                'url_query' => parse_url($request->input('url'), PHP_URL_QUERY),
+                'referer_path' => parse_url($request->input('referrer'), PHP_URL_PATH),
+                'referer_query' => parse_url($request->input('referrer'), PHP_URL_QUERY),
+                'referer_domain' => parse_url($request->input('referrer'), PHP_URL_HOST),
+                'page_title' => $request->input('title'),
+            ]);
+        }
+
+        if ($request->input('type') === 'event') {
+            $visitor->events()->create([
+                'website_id' => $request->input('website'),
+                'name' => $request->input('eventData'),
             ]);
         }
 

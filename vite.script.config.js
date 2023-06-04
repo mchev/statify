@@ -14,6 +14,6 @@ export default defineConfig({
         assetsDir: '',
         emptyOutDir: false,
         manifest: false,
-        minify: true,
+        minify: false,
     },
 });

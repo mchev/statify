@@ -117,6 +117,11 @@ class WebsiteController extends Controller
             ->groupByGranularity($options[$granularity]['query_format'])
             ->get();
 
+        $events = $website->events()
+            ->dateRange($range)
+            ->groupByGranularity($options[$granularity]['query_format'])
+            ->get();
+
         $previousVisitorsCount = $website->visitors()
             ->dateRange([$previousStart, $previousEnd])
             ->count();
@@ -146,6 +151,7 @@ class WebsiteController extends Controller
             ],
             'visitors' => $this->fillMissingDates($visitors->groupBy('date')->map(fn ($group) => $group->sum('count')), $dates),
             'views' => $this->fillMissingDates($views->groupBy('date')->map(fn ($group) => $group->sum('count')), $dates),
+            'events' => $this->convertToDatasets($this->fillMissingDates($events->groupBy('date')->map(fn ($group) => $group->pluck('count', 'name')), $dates)),
             'browsers' => $this->generateGroupedData($visitors, 'browser'),
             'os' => $this->generateGroupedData($visitors, 'os'),
             'devices' => $this->generateGroupedData($visitors, 'device'),
@@ -185,7 +191,7 @@ class WebsiteController extends Controller
     {
         return Inertia::render('Websites/Edit', [
             'website' => $website,
-            'script' => '<script async src="' . config('app.url') . '/' . env('STATIFY_SCRIPT_NAME') . '.js" website="'.$website->id . '"></script>'
+            'script' => '<script async src="' . config('app.url') . '/' . config('counted.script_name') . '.js" website="'.$website->id . '"></script>'
         ]);
     }
 
@@ -228,5 +234,44 @@ class WebsiteController extends Controller
     {
         return $data->groupBy($column)->map(fn ($group) => $group->sum('count'))->sortDesc();
     }
+
+    public function convertToDatasets($eventCounts)
+    {
+        $eventNames = [];
+
+        foreach ($eventCounts as $date => $events) {
+            if ($events !== 0) {
+                foreach ($events as $name => $count) {
+                    if (!in_array($name, $eventNames)) {
+                        $eventNames[] = $name;
+                    }
+                }
+            }
+        }
+
+        $datasets = [];
+
+        foreach ($eventNames as $eventName) {
+            $data = [];
+
+            foreach ($eventCounts as $date => $events) {
+                if ($events !== 0) {
+                    $count = $events->get($eventName, 0);
+                } else {
+                    $count = 0;
+                }
+                $data[] = $count;
+            }
+
+            $datasets[] = [
+                'label' => $eventName,
+                'data' => $data,
+                'backgroundColor' => sprintf('rgba(%d, %d, %d, %.2f)', rand(0, 40), rand(100, 190), rand(100, 180), rand(0, 100) / 100)
+            ];
+        }
+
+        return $datasets;
+    }
+
 
 }

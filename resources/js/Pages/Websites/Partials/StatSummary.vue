@@ -9,7 +9,7 @@ const props = defineProps({
 
 </script>
 <template>
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
     <Card>
       <FormattedNumber :value="summary.visitors.total" class="text-2xl font-semibold"/>
       <div class="flex items-end gap-2">

@@ -22,6 +22,8 @@ return new class extends Migration
             $table->string('referer_domain')->nullable();
             $table->string('page_title');
             $table->timestamps();
+
+            $table->index(['created_at']);
         });
     }
 

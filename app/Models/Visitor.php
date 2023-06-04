@@ -36,6 +36,11 @@ class Visitor extends Model
         return $this->hasMany(View::class);
     }
 
+    public function events()
+    {
+        return $this->hasMany(Event::class);
+    }
+
     public function scopeDateRange($query, array $dates)
     {
         $query->whereBetween('created_at', [$dates[0], $dates[1]]);

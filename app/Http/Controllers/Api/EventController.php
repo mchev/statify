@@ -8,18 +8,20 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Jenssegers\Agent\Agent;
 use Torann\GeoIP\Facades\GeoIP;
+use Illuminate\Support\Facades\Log;
 
 class EventController extends Controller
 {
     public function __invoke(Request $request)
     {
-        $validatedData = $request->validate([
+
+        $validated = $request->validate([
             'type' => 'required',
+            'token' => 'required|uuid',
             'website' => 'required|exists:websites,id',
         ]);
 
-        $token = $request->input('token', Str::uuid());
-        $visitor = Visitor::firstOrNew(['token' => $token]);
+        $visitor = Visitor::firstOrNew(['token' => $validated['token']]);
 
         if (! $visitor->exists) {
             $agent = new Agent();
@@ -27,8 +29,8 @@ class EventController extends Controller
             $geoip = GeoIP::getLocation($ipAddress);
 
             $visitor->fill([
-                'token' => Str::uuid(),
-                'website_id' => $validatedData['website'],
+                'token' => $validated['token'],
+                'website_id' => $validated['website'],
                 'referer_domain' => parse_url($request->referrer, PHP_URL_HOST),
                 'browser' => $agent->browser(),
                 'os' => $agent->platform(),
@@ -46,7 +48,7 @@ class EventController extends Controller
 
         if ($request->input('type') === 'view') {
             $visitor->views()->create([
-                'website_id' => $request->input('website'),
+                'website_id' => $validated['website'],
                 'url_path' => parse_url($request->input('url'), PHP_URL_PATH),
                 'url_query' => parse_url($request->input('url'), PHP_URL_QUERY),
                 'referer_path' => parse_url($request->input('referrer'), PHP_URL_PATH),
@@ -58,13 +60,12 @@ class EventController extends Controller
 
         if ($request->input('type') === 'event') {
             $visitor->events()->create([
-                'website_id' => $request->input('website'),
+                'website_id' => $validated['website'],
                 'name' => $request->input('eventData'),
+                'location' => $request->input('url'),
             ]);
         }
 
-        return response()->json([
-            'token' => $visitor->token,
-        ]);
+        return response()->json(['visitor' => $visitor]);
     }
 }

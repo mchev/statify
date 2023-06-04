@@ -8,6 +8,61 @@
   const countedEventAttribute = "data-counted-event";
   const debounceDelay = 500; // Adjust the delay time as needed
   const throttleLimit = 1000;
+  const SESSION_TOKEN_KEY = "counted-session-token";
+
+  function generateUUID() {
+    var crypto = window.crypto || window.msCrypto;
+    if (!crypto || !crypto.getRandomValues) {
+      throw new Error("Crypto.getRandomValues() not supported.");
+    }
+
+    var buffer = new Uint8Array(16);
+    crypto.getRandomValues(buffer);
+
+    // Set the version (4) and variant (8, 9, A, or B) bits
+    buffer[6] = (buffer[6] & 0x0f) | 0x40; // Version 4
+    buffer[8] = (buffer[8] & 0x3f) | 0x80; // Variant 10xx
+
+    var hexCodes = [];
+    for (var i = 0; i < buffer.length; i++) {
+      hexCodes.push(buffer[i].toString(16).padStart(2, "0"));
+    }
+
+    var uuid =
+      hexCodes.slice(0, 4).join("") +
+      "-" +
+      hexCodes.slice(4, 6).join("") +
+      "-" +
+      hexCodes.slice(6, 8).join("") +
+      "-" +
+      hexCodes.slice(8, 10).join("") +
+      "-" +
+      hexCodes.slice(10).join("");
+
+    return uuid;
+  }
+
+  // // Send statistics to the API
+  // async function sendStatistics(data) {
+  //   try {
+  //     const response = await fetch(apiUrl, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(data),
+  //     });
+  //     if (response.ok) {
+  //       console.log(response.data)
+  //     } else {
+  //       console.error("Failed to send statistics:", response.status);
+  //       throw new Error("Failed to send statistics");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error sending statistics:", error);
+  //     throw error;
+  //   }
+  // }
 
   /**
    * Send statistics to the API
@@ -15,11 +70,20 @@
    */
   function sendStatistics(data) {
     if (navigator.sendBeacon) {
-      navigator.sendBeacon(apiUrl, JSON.stringify(data));
+      const formData = new FormData();
+      for (const property in data) {
+        if (data.hasOwnProperty(property)) {
+          formData.append(property, data[property]);
+        }
+      }
+      const success = navigator.sendBeacon(apiUrl, formData);
+      if (!success) {
+        console.error("Failed to send statistics.");
+      }
     } else {
       const xhr = new XMLHttpRequest();
       xhr.open("POST", apiUrl, false);
-      xhr.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
+      xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
       xhr.send(data);
     }
   }
@@ -46,9 +110,13 @@
       eventData,
     };
 
-    const token = sessionStorage.getItem("stat-token");
+    const token = sessionStorage.getItem(SESSION_TOKEN_KEY);
     if (token) {
       trackingData.token = token;
+    } else {
+      const newToken = generateUUID();
+      sessionStorage.setItem(SESSION_TOKEN_KEY, newToken);
+      trackingData.token = newToken;
     }
 
     console.log(trackingData);
@@ -171,7 +239,10 @@
       track();
     });
     window.addEventListener("popstate", () => track());
-    window.addEventListener("click", throttle(handleTrackingClick, throttleLimit));
+    window.addEventListener(
+      "click",
+      throttle(handleTrackingClick, throttleLimit)
+    );
     window.addEventListener("visibilitychange", () => track("activity"));
   }
 

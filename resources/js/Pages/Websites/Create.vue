@@ -4,7 +4,7 @@ import CreateWebsiteForm from '@/Pages/Websites/Partials/CreateWebsiteForm.vue';
 </script>
 
 <template>
-    <AppLayout title="Create Team">
+    <AppLayout title="Create Website">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 Create Website

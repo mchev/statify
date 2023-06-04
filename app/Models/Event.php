@@ -32,7 +32,7 @@ class Event extends Model
 
     public function scopeGroupByGranularity($query, string $granularity)
     {
-        $query->selectRaw($granularity . " AS date, COUNT(*) AS count, name")
+        $query->selectRaw($granularity.' AS date, COUNT(*) AS count, name')
             ->groupBy('date', 'name');
     }
 }

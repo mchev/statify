@@ -38,5 +38,4 @@ class Website extends Model
     {
         return $this->hasMany(Event::class);
     }
-
 }

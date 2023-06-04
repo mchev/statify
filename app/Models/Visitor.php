@@ -48,7 +48,7 @@ class Visitor extends Model
 
     public function scopeGroupByGranularity($query, string $granularity)
     {
-        $query->selectRaw($granularity . " AS date, COUNT(*) AS count, AVG(TIMESTAMPDIFF(SECOND, created_at, updated_at)) as average_time, browser, os, device, screen, language, country, city")
+        $query->selectRaw($granularity.' AS date, COUNT(*) AS count, AVG(TIMESTAMPDIFF(SECOND, created_at, updated_at)) as average_time, browser, os, device, screen, language, country, city')
             ->groupBy('date', 'browser', 'os', 'device', 'screen', 'language', 'country', 'city');
     }
 }

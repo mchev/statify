@@ -38,7 +38,7 @@ class View extends Model
 
     public function scopeGroupByGranularity($query, string $granularity)
     {
-        $query->selectRaw($granularity . " AS date, COUNT(*) AS count, url_path, referer_domain, page_title")
+        $query->selectRaw($granularity.' AS date, COUNT(*) AS count, url_path, referer_domain, page_title')
             ->groupBy('date', 'url_path', 'referer_domain', 'page_title');
     }
 }

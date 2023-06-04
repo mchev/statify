@@ -19,21 +19,11 @@ use Inertia\Inertia;
 
 Route::get('/{scriptName}.js', [ScriptController::class, 'show']);
 
-// Invited Users
-Route::get('/register/{invitationToken}', [InvitedUserController::class, 'create'])
-    ->middleware(['guest'])
-    ->name('register.invited');
-
-Route::post('/register', [InvitedUserController::class, 'store'])
-    ->middleware(['guest'])
-    ->name('register.invited.store');
-
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-
     Route::get('/', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');

@@ -47,13 +47,12 @@ class WebsiteController extends Controller
      */
     public function show(Request $request, Website $website)
     {
-
         $range = $request->has('range') ? [
             Carbon::parse($request->range[0])->startOfDay(),
-            Carbon::parse($request->range[1])->endOfDay()
+            Carbon::parse($request->range[1])->endOfDay(),
         ] : [
             now()->subDays(6)->startOfDay(),
-            now()->endOfDay()
+            now()->endOfDay(),
         ];
 
         $duration = $range[0]->diffInDays($range[1]);
@@ -63,40 +62,40 @@ class WebsiteController extends Controller
 
         $options = [
             'years' => [
-                'format' => "Y",
+                'format' => 'Y',
                 'query_format' => "DATE_FORMAT(created_at, '%Y')",
                 'range' => [
                     $range[0]->copy()->startOfYear(),
                     '1 year',
-                    $range[1]->copy()->endOfYear()
-                ]
+                    $range[1]->copy()->endOfYear(),
+                ],
             ],
             'months' => [
-                'format' => "Y-m",
+                'format' => 'Y-m',
                 'query_format' => "DATE_FORMAT(created_at, '%Y-%m')",
                 'range' => [
                     $range[0]->copy()->startOfMonth(),
                     '1 month',
-                    $range[1]->copy()->endOfMonth()
-                ]
+                    $range[1]->copy()->endOfMonth(),
+                ],
             ],
             'days' => [
-                'format' => "Y-m-d",
-                'query_format' => "DATE(created_at)",
+                'format' => 'Y-m-d',
+                'query_format' => 'DATE(created_at)',
                 'range' => [
                     $range[0]->copy()->startOfDay(),
                     '1 day',
-                    $range[1]->copy()->endOfDay()
-                ]
+                    $range[1]->copy()->endOfDay(),
+                ],
             ],
             'hours' => [
-                'format' => "Y-m-d H",
+                'format' => 'Y-m-d H',
                 'query_format' => "DATE_FORMAT(created_at, '%Y-%m-%d %H')",
                 'range' => [
                     $range[0]->copy()->startOfDay(),
                     '1 hour',
-                    $range[1]->copy()->endOfDay()
-                ]
+                    $range[1]->copy()->endOfDay(),
+                ],
             ],
         ];
 
@@ -139,11 +138,11 @@ class WebsiteController extends Controller
             'summary' => [
                 'visitors' => [
                     'total' => $visitors_count,
-                    'diff' => $visitors_count - $previousVisitorsCount
+                    'diff' => $visitors_count - $previousVisitorsCount,
                 ],
                 'views' => [
                     'total' => $views_count,
-                    'diff' => $views_count - $previousViewsCount
+                    'diff' => $views_count - $previousViewsCount,
                 ],
                 'average_time' => $visitors->avg('average_time'),
                 'bounce_rate' => round($bounceRate),
@@ -167,7 +166,7 @@ class WebsiteController extends Controller
         return Inertia::render('Websites/Show', [
             'filters' => [
                 'range' => [$range[0]->format('Y-m-d'), $range[1]->format('Y-m-d')],
-                'search' => $request->search
+                'search' => $request->search,
             ],
             'website' => $website->load('team'),
             'dates' => $dates,
@@ -191,7 +190,7 @@ class WebsiteController extends Controller
     {
         return Inertia::render('Websites/Edit', [
             'website' => $website,
-            'script' => '<script async src="' . config('app.url') . '/' . config('counted.script_name') . '.js" website="'.$website->id . '"></script>'
+            'script' => '<script async src="'.config('app.url').'/'.config('counted.script_name').'.js" website="'.$website->id.'"></script>',
         ]);
     }
 
@@ -210,7 +209,6 @@ class WebsiteController extends Controller
     {
         //
     }
-
 
     /**
      * Determine the granularity based on the range.
@@ -242,7 +240,7 @@ class WebsiteController extends Controller
         foreach ($eventCounts as $date => $events) {
             if ($events !== 0) {
                 foreach ($events as $name => $count) {
-                    if (!in_array($name, $eventNames)) {
+                    if (! in_array($name, $eventNames)) {
                         $eventNames[] = $name;
                     }
                 }
@@ -266,12 +264,10 @@ class WebsiteController extends Controller
             $datasets[] = [
                 'label' => $eventName,
                 'data' => $data,
-                'backgroundColor' => sprintf('rgba(%d, %d, %d, %.2f)', rand(0, 40), rand(100, 190), rand(100, 180), rand(0, 100) / 100)
+                'backgroundColor' => sprintf('rgba(%d, %d, %d, %.2f)', rand(0, 40), rand(100, 190), rand(100, 180), rand(0, 100) / 100),
             ];
         }
 
         return $datasets;
     }
-
-
 }

@@ -5,16 +5,13 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Visitor;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Jenssegers\Agent\Agent;
 use Torann\GeoIP\Facades\GeoIP;
-use Illuminate\Support\Facades\Log;
 
 class EventController extends Controller
 {
     public function __invoke(Request $request)
     {
-
         $validated = $request->validate([
             'type' => 'required',
             'token' => 'required|uuid',

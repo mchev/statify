@@ -76,10 +76,12 @@ Frequency: Every Minutes
 - [ ] Websites CRUD
 - [x] Send API
 - [x] JS stat script
-- [ ] Allow CORS websites array
+- [x] Allow CORS websites array
 - [ ] Events CRUD
 - [ ] Events Aggregation
 - [ ] Schedule run delete events older than 24h every hours
+- [ ] Avg time comparaison to previous period
+- [ ] Engagement rate comparaison to previous period
 
 agregated
 - from (local, ga, etc)

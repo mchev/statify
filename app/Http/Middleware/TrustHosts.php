@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Website;
 use Illuminate\Http\Middleware\TrustHosts as Middleware;
 
 class TrustHosts extends Middleware
@@ -13,8 +14,14 @@ class TrustHosts extends Middleware
      */
     public function hosts(): array
     {
-        return [
-            $this->allSubdomainsOfApplicationUrl(),
-        ];
+        try {
+            $domains = Website::pluck('domain')->toArray();
+        } catch (QueryException $e) {
+            $domains = [];
+        }
+        $trustedHosts = [$this->allSubdomainsOfApplicationUrl()];
+        $trustedHosts = array_merge($trustedHosts, $domains);
+
+        return $trustedHosts;
     }
 }

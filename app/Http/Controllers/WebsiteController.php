@@ -199,7 +199,14 @@ class WebsiteController extends Controller
      */
     public function update(Request $request, Website $website)
     {
-        //
+        $validated = $request->validate([
+            'name' => ['required', 'unique:websites,name,' . $website->id, 'max:255', 'min:3'],
+            'domain' => ['required', 'unique:websites,domain,' . $website->id, new Domain],
+        ]);
+
+        $website->update($validated);
+
+        return redirect()->back();
     }
 
     /**
@@ -207,7 +214,7 @@ class WebsiteController extends Controller
      */
     public function destroy(Website $website)
     {
-        //
+        $website->delete();
     }
 
     /**

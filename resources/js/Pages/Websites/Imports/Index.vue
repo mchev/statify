@@ -3,9 +3,9 @@ import { Link, useForm } from "@inertiajs/vue3";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import Card from "@/Components/Card.vue";
 import FormSection from "@/Components/FormSection.vue";
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import SecondaryButton from '@/Components/SecondaryButton.vue';
 import UpdateWebsiteInformationForm from "@/Pages/Websites/Partials/UpdateWebsiteInformationForm.vue";
-import CheckWebsiteScriptForm from "@/Pages/Websites/Partials/CheckWebsiteScriptForm.vue";
-import DeleteWebsiteForm from "@/Pages/Websites/Partials/DeleteWebsiteForm.vue";
 import CreateWebsiteForm from "@/Pages/Websites/Partials/CreateWebsiteForm.vue";
 
 defineProps({
@@ -21,10 +21,10 @@ defineProps({
                 <h2
                     class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight"
                 >
-                    {{ website.name }} settings
+                    {{ website.name }} import
                 </h2>
                 <Link
-                    :href="route('websites.show', website)"
+                    :href="route('websites.edit', website)"
                     class="flex items-center gap-2"
                 >
                     <svg
@@ -41,7 +41,7 @@ defineProps({
                             d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
                         />
                     </svg>
-                    Back to statistics
+                    Back to settings
                 </Link>
             </div>
         </template>
@@ -50,12 +50,6 @@ defineProps({
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
 
                 <div class="flex flex-col gap-2 md:gap-10">
-
-                    <UpdateWebsiteInformationForm :website="website"/>
-
-                    <CheckWebsiteScriptForm :website="website" :script="script"/>
-
-                    <DeleteWebsiteForm :website="website"/>
 
                 </div>
             </div>

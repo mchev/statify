@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('events', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('website_id')->index();
+            $table->foreignId('website_id')->onDelete('cascade')->index();
             $table->foreignId('visitor_id');
             $table->string('name');
-            $table->string('location');
+            $table->string('location')->nullable();
             $table->timestamps();
 
             $table->index(['created_at']);

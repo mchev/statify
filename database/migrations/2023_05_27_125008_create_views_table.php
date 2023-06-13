@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('views', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('website_id')->index();
+            $table->foreignId('website_id')->onDelete('cascade')->index();
             $table->foreignId('visitor_id');
             $table->string('url_path');
             $table->string('url_query')->nullable();

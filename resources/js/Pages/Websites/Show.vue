@@ -190,11 +190,16 @@ watch(
                 </div>
 
                 <div class="grid grid-cols-1 gap-4 mb-4">
-                    <Card class="h-96">
-                        <EventStats
-                            :dates="dates"
-                            :events="stats.events"
-                        />
+                    <Card>
+                        <div class="flex justify-between mb-4 font-semibold">
+                            <h3>Events</h3>
+                        </div>
+                        <div class="h-96">
+                            <EventStats
+                                :dates="dates"
+                                :events="stats.events"
+                            />
+                        </div>
                     </Card>
                 </div>
 

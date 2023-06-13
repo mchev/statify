@@ -277,7 +277,7 @@ class WebsiteController extends Controller
             $datasets[] = [
                 'label' => $eventName,
                 'data' => $data,
-                'backgroundColor' => sprintf('rgba(%d, %d, %d, %.2f)', rand(0, 40), rand(100, 190), rand(100, 180), rand(0, 100) / 100),
+                'backgroundColor' => sprintf('rgba(%d, %d, %d, %.2f)', rand(0, 40), rand(100, 190), rand(100, 180), rand(30, 100) / 100),
             ];
         }
 

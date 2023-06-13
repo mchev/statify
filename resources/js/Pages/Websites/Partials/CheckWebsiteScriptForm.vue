@@ -12,11 +12,11 @@ const props = defineProps({
 });
 
 const form = useForm({
-    
+    check: null
 });
 
 const check = () => {
-    form.post('websites.check.script', props.website)
+    form.post(route('websites.checks.script', props.website))
 }
 </script>
 
@@ -37,12 +37,16 @@ const check = () => {
 
         <template #actions>
             <ActionMessage :on="form.recentlySuccessful" class="mr-3">
-                Saved.
+                <span class="text-green-500">The script was found on your site.</span>
+            </ActionMessage>
+            <ActionMessage :on="form.errors != null" class="mr-3">
+                <span class="text-red-500">{{ form.errors.check }}</span>
             </ActionMessage>
 
             <PrimaryButton
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
+                @click="check"
             >
                 Check
             </PrimaryButton>

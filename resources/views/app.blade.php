@@ -14,7 +14,7 @@
         @production
             <script async src="https://statify.pegase.io/{{ env('COUNTED_SCRIPT_NAME') }}.js" website="1"></script>
         @else
-            <script src="http://counted.test/{{ env('COUNTED_SCRIPT_NAME') }}.js" website="1"></script>
+            <script async src="http://counted.test/{{ env('COUNTED_SCRIPT_NAME') }}.js" website="1"></script>
         @endproduction
 
         <!-- Scripts -->

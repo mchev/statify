@@ -8,30 +8,35 @@ import InputError from '@/Components/InputError.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 
-const confirmingUserDeletion = ref(false);
-const passwordInput = ref(null);
+const confirmingWebsiteDeletion = ref(false);
+const WebsiteNameInput = ref(null);
+
+const props = defineProps({
+    website: Object,
+});
 
 const form = useForm({
-    password: '',
+    name: props.website.name,
+    name_confirmation: '',
 });
 
 const confirmUserDeletion = () => {
-    confirmingUserDeletion.value = true;
+    confirmingWebsiteDeletion.value = true;
 
-    setTimeout(() => passwordInput.value.focus(), 250);
+    setTimeout(() => WebsiteNameInput.value.focus(), 250);
 };
 
-const deleteUser = () => {
-    form.delete(route('current-user.destroy'), {
+const deleteWebsite = () => {
+    form.delete(route('websites.destroy', props.website), {
         preserveScroll: true,
         onSuccess: () => closeModal(),
-        onError: () => passwordInput.value.focus(),
+        onError: () => WebsiteNameInput.value.focus(),
         onFinish: () => form.reset(),
     });
 };
 
 const closeModal = () => {
-    confirmingUserDeletion.value = false;
+    confirmingWebsiteDeletion.value = false;
 
     form.reset();
 };
@@ -59,26 +64,27 @@ const closeModal = () => {
             </div>
 
             <!-- Delete Website Confirmation Modal -->
-            <DialogModal :show="confirmingUserDeletion" @close="closeModal">
+            <DialogModal :show="confirmingWebsiteDeletion" @close="closeModal">
                 <template #title>
                     Delete Website
                 </template>
 
                 <template #content>
-                    Are you sure you want to delete the website? Once the website is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete the website.
+                    <p class="mb-2">Are you sure you want to delete the website? Once the website is deleted, all of its resources and data will be permanently deleted.</p>
+                    <p>Please enter the website name ({{ website.name }}) to confirm you would like to permanently delete it.</p>
 
                     <div class="mt-4">
                         <TextInput
-                            ref="passwordInput"
-                            v-model="form.password"
-                            type="password"
+                            ref="WebsiteNameInput"
+                            v-model="form.name_confirmation"
+                            type="text"
                             class="mt-1 block w-3/4"
-                            placeholder="Password"
+                            placeholder="Website name"
                             autocomplete="current-password"
-                            @keyup.enter="deleteUser"
+                            @keyup.enter="deleteWebsite"
                         />
 
-                        <InputError :message="form.errors.password" class="mt-2" />
+                        <InputError :message="form.errors.name" class="mt-2" />
                     </div>
                 </template>
 
@@ -91,7 +97,7 @@ const closeModal = () => {
                         class="ml-3"
                         :class="{ 'opacity-25': form.processing }"
                         :disabled="form.processing"
-                        @click="deleteUser"
+                        @click="deleteWebsite"
                     >
                         Delete Website
                     </DangerButton>

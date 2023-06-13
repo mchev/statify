@@ -41,6 +41,8 @@ Route::middleware([
         ->name('websites.edit');
     Route::put('/websites/{website}', [WebsiteController::class, 'update'])
         ->name('websites.update');
+    Route::delete('/websites/{website}', [WebsiteController::class, 'destroy'])
+        ->name('websites.destroy');
 
     // Checks
     Route::post('/websites/{website}/checks/script', WebsiteCheckScriptController::class)

@@ -38,19 +38,13 @@ const logout = () => {
                 <!-- Primary Navigation Menu -->
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-14">
-                        <div class="flex">
-                            <!-- Logo -->
-                            <div class="shrink-0 flex items-center">
-                                <Link :href="route('dashboard')" data-counted-event="Logo clicked">
-                                    <ApplicationMark class="block h-7 w-auto" />
-                                </Link>
-                            </div>
-                            <div class="flex items-center gap-2 ml-6">
-                                <button type="button" data-counted-event="Button clicked">TEst</button>
-                                <a target="_blank" href="https://google.com" data-counted-event="Google clicked">Google</a>
-                            </div>
-                        </div>
 
+                        <!-- Logo -->
+                        <div class="shrink-0 flex items-center">
+                            <Link :href="route('dashboard')">
+                                <ApplicationMark class="block h-7 w-auto" />
+                            </Link>
+                        </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
                             <div class="ml-3 relative">

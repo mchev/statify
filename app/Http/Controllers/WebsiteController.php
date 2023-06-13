@@ -212,9 +212,15 @@ class WebsiteController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Website $website)
+    public function destroy(Request $request, Website $website)
     {
+        $request->validate([
+            'name' => ['required', 'confirmed'],
+        ]);
+
         $website->delete();
+
+        return redirect()->route('websites.index');
     }
 
     /**
